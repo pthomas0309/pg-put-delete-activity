@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
   console.log('jQuery sourced.');
   refreshBooks();
   addClickHandlers();
@@ -10,14 +10,38 @@ function addClickHandlers() {
   // TODO - Add code for edit & delete buttons
   //DELETE
   $('#bookShelf').on('click', '.delete-book', handleDelete);
+  $('#bookShelf').on('click', '.mark-read', handleMarkRead);
 }
 
-function handleDelete(){
+function handleMarkRead() {
+  console.log('clickety click');
+  markAsRead($(this).data('id'), "TRUE");
+}
+
+function markAsRead(bookId, isReadTrue) {
+  $.ajax({
+    method: "PUT",
+    url: `books/${bookId}`,
+    data: {
+      isRead: isReadTrue
+    }
+  })
+    .then(response => {
+      console.log('book read');
+      refreshBooks();
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    })
+}
+
+function handleDelete() {
   console.log('clickety click');
   deleteBook($(this).data('id'));
 }
 
-function deleteBook(bookId){
+function deleteBook(bookId) {
   $.ajax({
     method: 'DELETE',
     url: `/books/${bookId}`
@@ -43,13 +67,13 @@ function addBook(bookToAdd) {
     type: 'POST',
     url: '/books',
     data: bookToAdd,
-    }).then(function(response) {
-      console.log('Response from server.', response);
-      refreshBooks();
-    }).catch(function(error) {
-      console.log('Error in POST', error)
-      alert('Unable to add book at this time. Please try again later.');
-    });
+  }).then(function (response) {
+    console.log('Response from server.', response);
+    refreshBooks();
+  }).catch(function (error) {
+    console.log('Error in POST', error)
+    alert('Unable to add book at this time. Please try again later.');
+  });
 }
 
 // refreshBooks will get all books from the server and render to page
@@ -57,10 +81,10 @@ function refreshBooks() {
   $.ajax({
     type: 'GET',
     url: '/books'
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     renderBooks(response);
-  }).catch(function(error){
+  }).catch(function (error) {
     console.log('error in GET', error);
   });
 }
@@ -70,7 +94,7 @@ function refreshBooks() {
 function renderBooks(books) {
   $('#bookShelf').empty();
 
-  for(let i = 0; i < books.length; i += 1) {
+  for (let i = 0; i < books.length; i += 1) {
     let book = books[i];
     // For each book, append a new row to our table
     $('#bookShelf').append(`

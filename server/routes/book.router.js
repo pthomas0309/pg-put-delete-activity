@@ -44,8 +44,6 @@ router.put('/:id', (req, res) => {
   console.log(readStatus);
   let queryString = '';
   if (readStatus === 'TRUE'){
-      queryString = `UPDATE "books" SET "isRead"='false' WHERE "books".id = $1`;
-  } else if (readStatus === 'FALSE'){
   queryString = `UPDATE "books" SET "isRead"='true' WHERE "books".id = $1`;
   } else {
       res.sendStatus(500);
