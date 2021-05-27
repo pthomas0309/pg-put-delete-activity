@@ -14,6 +14,19 @@ function addClickHandlers() {
 
 function handleDelete(){
   console.log('clickety click');
+  deleteBook($(this).data('id'));
+}
+
+function deleteBook(bookId){
+  $.ajax({
+    method: 'DELETE',
+    url: `/books/${bookId}`
+  }).then(response => {
+    console.log('removed book from shelf');
+    refreshBooks();
+  }).catch(err => {
+    alert('There was a problem removing the book, try again', err);
+  })
 }
 
 function handleSubmit() {
